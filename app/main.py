@@ -1,16 +1,15 @@
-from app.llm.llm_client import LLMClient
+from app.agent.wiki_agent import WikiAgent
 
 
 def main():
 
-    llm = LLMClient()
+    query = input("Enter topic: ")
 
-    content = """
-    Artificial Intelligence is a branch of computer science
-    focused on building intelligent systems.
-    """
+    agent = WikiAgent()
 
-    result = llm.generate_report(content)
+    result = agent.run(query)
+
+    print("\n===== FINAL REPORT =====\n")
 
     print(result)
 
