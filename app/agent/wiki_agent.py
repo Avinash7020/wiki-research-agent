@@ -1,5 +1,6 @@
 from app.tools.wiki_search_tool import WikiSearchTool
 from app.llm.llm_client import LLMClient
+from app.report.report_generator import ReportGenerator
 
 
 class WikiAgent:
@@ -10,6 +11,8 @@ class WikiAgent:
 
         self.llm = LLMClient()
 
+        self.report_generator = ReportGenerator()
+
     def run(self, query):
 
         print("[Agent Thinking] Need external knowledge...")
@@ -19,7 +22,10 @@ class WikiAgent:
         wiki_result = self.wiki_tool.search(query)
 
         if "error" in wiki_result:
-            return wiki_result["error"]
+            return {
+                "report": wiki_result["error"],
+                "file": None
+            }
 
         print("[Agent Observation] Knowledge retrieved")
 
@@ -38,4 +44,12 @@ class WikiAgent:
 
         report = self.llm.generate_report(content)
 
-        return report
+        saved_file = self.report_generator.save_report(
+            query,
+            report
+        )
+
+        return {
+            "report": report,
+            "file": saved_file
+        }

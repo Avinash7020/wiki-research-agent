@@ -11,7 +11,11 @@ def main():
 
     print("\n===== FINAL REPORT =====\n")
 
-    print(result)
+    print(result["report"])
+
+    print("\n===== FILE SAVED =====\n")
+
+    print(result["file"])
 
 
 if __name__ == "__main__":
