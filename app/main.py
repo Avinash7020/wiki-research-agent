@@ -1,11 +1,16 @@
-from app.tools.wiki_search_tool import WikiSearchTool
+from app.llm.llm_client import LLMClient
 
 
 def main():
 
-    tool = WikiSearchTool()
+    llm = LLMClient()
 
-    result = tool.search("Artificial Intelligence")
+    content = """
+    Artificial Intelligence is a branch of computer science
+    focused on building intelligent systems.
+    """
+
+    result = llm.generate_report(content)
 
     print(result)
 
