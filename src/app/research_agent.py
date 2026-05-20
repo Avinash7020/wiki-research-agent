@@ -4,8 +4,12 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from src.app.report.report_generator import ReportGenerator
-from src.app.tools.wiki_search_tool import WikiSearchTool
+try:
+    from .report.report_generator import ReportGenerator
+    from .tools.wiki_search_tool import WikiSearchTool
+except ImportError:
+    from report.report_generator import ReportGenerator
+    from tools.wiki_search_tool import WikiSearchTool
 
 
 load_dotenv()
@@ -20,21 +24,20 @@ class WikiResearchAgent:
         self.tools = [
             {
                 "type": "function",
-                "function": {
-                    "name": "search_wikipedia",
-                    "description": "Search Wikipedia for a topic and return the best matching page summary.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "query": {
-                                "type": "string",
-                                "description": "The topic to search on Wikipedia.",
-                            }
-                        },
-                        "required": ["query"],
-                        "additionalProperties": False,
+                "name": "search_wikipedia",
+                "description": "Search Wikipedia for a topic and return the best matching page summary.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "The topic to search on Wikipedia.",
+                        }
                     },
+                    "required": ["query"],
+                    "additionalProperties": False,
                 },
+                "strict": True,
             }
         ]
 
@@ -56,6 +59,10 @@ class WikiResearchAgent:
             ]
             if not function_calls:
                 break
+
+            # Preserve the model's tool call items so the next request can match
+            # each function_call_output back to its originating call_id.
+            input_items.extend(response.output)
 
             for call in function_calls:
                 result = self._run_tool(call.name, call.arguments)

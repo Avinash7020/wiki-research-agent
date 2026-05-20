@@ -11,5 +11,11 @@ Small Wikipedia research CLI built with the OpenAI SDK.
 ## Run
 
 ```bash
+python3 -m main
+```
+
+If you run from the repo root instead of `src/app`, use:
+
+```bash
 python3 -m src.app.main
 ```

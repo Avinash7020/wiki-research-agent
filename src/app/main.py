@@ -1,4 +1,7 @@
-from src.app.research_agent import WikiResearchAgent
+try:
+    from .research_agent import WikiResearchAgent
+except ImportError:
+    from research_agent import WikiResearchAgent
 
 
 def main():
